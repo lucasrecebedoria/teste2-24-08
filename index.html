@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Move Buss • Registro de Caixas</title>
+  <meta name="color-scheme" content="dark light">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'metal-green': '#058c42',
+            'metal-gold': '#caa24b',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="icon" href="./assets/logo.png">
+  <style>
+    /* Fundo preto com degradê cinza e bolinhas metal escovado */
+    body {
+      background: radial-gradient(circle at 25px 25px, rgba(255,255,255,0.08) 2px, transparent 3px),
+                  radial-gradient(circle at 75px 75px, rgba(255,255,255,0.08) 2px, transparent 3px),
+                  linear-gradient(135deg, #0b0b0b 0%, #1a1a1a 40%, #222 100%);
+      background-size: 100px 100px, 100px 100px, cover;
+      color: #e5e7eb;
+    }
+    .glass {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .btn-metal {
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 6px 16px rgba(0,0,0,0.3);
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .btn-metal:hover { transform: scale(1.03); box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 12px 24px rgba(0,0,0,0.35);}
+    .badge-metal {
+      background: linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 6px 12px rgba(0,0,0,0.35);
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Sidebar -->
+  <div id="sidebar" class="fixed left-4 top-4 z-40">
+    <button id="menuBtn" class="btn-metal rounded-2xl px-4 py-2 bg-metal-green/30 hover:bg-metal-green/40 font-semibold">
+      ☰ Menu
+    </button>
+    <div id="menuPanel" class="hidden mt-2 p-3 rounded-2xl glass w-72">
+      <p class="text-xs uppercase tracking-wider text-gray-300 mb-3">Navegação</p>
+      <nav class="grid gap-2">
+        <button data-target="painel" class="btn-metal rounded-xl px-3 py-2 bg-white/5 hover:bg-white/10 text-left">Abertura e fechamento de caixa</button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 glass">
+    <div class="max-w-6xl mx-auto flex items-center gap-4 p-4">
+      <img src="./assets/logo.png" class="h-10 w-auto" alt="Move Buss Logo" />
+      <div class="flex-1">
+        <h1 class="text-xl font-bold tracking-wide">Move Buss • Mobilidade Urbana</h1>
+        <p class="text-sm text-gray-300">Registro de Caixas Pagos</p>
+      </div>
+      <div id="userBadge" class="hidden items-center gap-2">
+        <span id="userName" class="text-sm"></span>
+        <span id="userMat" class="text-xs"></span>
+        <span id="userRoleBadge" class="badge-metal text-black font-bold rounded-full px-3 py-1"></span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btnChangePass" class="btn-metal rounded-xl px-3 py-2 bg-white/5 hover:bg-white/10 hidden">Alterar Senha</button>
+        <button id="btnLogout" class="btn-metal rounded-xl px-3 py-2 bg-white/5 hover:bg-white/10 hidden">Deslogar</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-6xl mx-auto p-4 grid gap-6">
+
+    <!-- Auth Cards -->
+    <section id="authSection" class="grid md:grid-cols-2 gap-6">
+      <!-- Login -->
+      <div class="glass rounded-2xl p-6">
+        <h2 class="text-lg font-semibold mb-4">Login (por Matrícula)</h2>
+        <div class="grid gap-3">
+          <label class="text-sm">Matrícula</label>
+          <input id="loginMat" class="rounded-xl bg-white/5 p-3 outline-none" placeholder="ex: 4144" />
+          <label class="text-sm mt-2">Senha</label>
+          <input id="loginPass" type="password" class="rounded-xl bg-white/5 p-3 outline-none" placeholder="••••••••" />
+          <button id="btnLogin" class="btn-metal rounded-xl px-4 py-3 mt-3 bg-metal-green/40 hover:bg-metal-green/50 font-semibold">Entrar</button>
+        </div>
+      </div>
+
+      <!-- Cadastro -->
+      <div class="glass rounded-2xl p-6">
+        <h2 class="text-lg font-semibold mb-4">Criar Conta</h2>
+        <div class="grid gap-3">
+          <label class="text-sm">Matrícula</label>
+          <input id="regMat" class="rounded-xl bg-white/5 p-3 outline-none" placeholder="ex: 70029" />
+          <label class="text-sm">Nome completo</label>
+          <input id="regName" class="rounded-xl bg-white/5 p-3 outline-none" placeholder="Seu nome" />
+          <label class="text-sm">Senha</label>
+          <input id="regPass" type="password" class="rounded-xl bg-white/5 p-3 outline-none" placeholder="Mínimo 6 caracteres" />
+          <button id="btnRegister" class="btn-metal rounded-xl px-4 py-3 mt-3 bg-white/10 hover:bg-white/20 font-semibold">Cadastrar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Painel de Caixa -->
+    <section id="painel" class="hidden glass rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <span class="text-lg font-semibold">Painel de Caixa</span>
+          <span id="statusCaixa" class="badge-metal rounded-full px-3 py-1 text-black font-bold">Caixa Fechado</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btnAbrir" class="btn-metal rounded-xl px-3 py-2 bg-metal-green/60 hover:bg-metal-green/70 font-semibold">Abrir caixa</button>
+          <button id="btnFechar" class="btn-metal rounded-xl px-3 py-2 bg-white/10 hover:bg-white/20 font-semibold" disabled>Fechar caixa</button>
+        </div>
+      </div>
+
+      <!-- Formulário Lançamento (aparece somente com caixa aberto) -->
+      <div id="lancamentoCard" class="hidden mt-4">
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="glass rounded-2xl p-4">
+            <h3 class="font-semibold mb-3">Novo Lançamento</h3>
+            <div class="grid gap-3">
+              <label class="text-sm">Tipo de Validador</label>
+              <select id="tipoValidador" class="rounded-xl bg-white/5 p-3 outline-none">
+                <option value="PRODATA">PRODATA</option>
+                <option value="DIGICON">DIGICON</option>
+              </select>
+
+              <label class="text-sm">Quantidade de Bordos</label>
+              <input id="qtdBordos" type="number" min="0" class="rounded-xl bg-white/5 p-3 outline-none" value="0"/>
+
+              <label class="text-sm">Valor (R$)</label>
+              <input id="valor" type="number" class="rounded-xl bg-white/5 p-3 outline-none" value="0" readonly/>
+
+              <label class="text-sm">Prefixo</label>
+              <div class="flex items-center gap-2">
+                <span class="px-3 py-2 rounded-xl bg-white/10">55</span>
+                <input id="prefixo" maxlength="3" class="flex-1 rounded-xl bg-white/5 p-3 outline-none" placeholder="3 dígitos"/>
+              </div>
+
+              <label class="text-sm">Data do Caixa</label>
+              <input id="dataCaixa" type="date" class="rounded-xl bg-white/5 p-3 outline-none"/>
+
+              <label class="text-sm">Matrícula Motorista</label>
+              <input id="matMotorista" class="rounded-xl bg-white/5 p-3 outline-none" placeholder="Ex: 1234"/>
+
+              <label class="text-sm">Matrícula Recebedor</label>
+              <input id="matRecebedor" class="rounded-xl bg-white/5 p-3 outline-none" readonly/>
+
+              <button id="btnSalvar" class="btn-metal rounded-xl px-4 py-3 mt-3 bg-metal-green/40 hover:bg-metal-green/50 font-semibold">Salvar & Imprimir recibo</button>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-4">
+            <h3 class="font-semibold mb-3">Sangria (requer admin)</h3>
+            <div class="grid gap-3">
+              <label class="text-sm">Valor a ser sangrado (R$)</label>
+              <input id="sangriaValor" type="number" min="0" class="rounded-xl bg-white/5 p-3 outline-none" value="0"/>
+              <label class="text-sm">Motivo da sangria</label>
+              <input id="sangriaMotivo" class="rounded-xl bg-white/5 p-3 outline-none" placeholder="Descreva o motivo"/>
+              <div class="glass rounded-xl p-3">
+                <p class="text-xs text-gray-300 mb-2">Autorização do Admin</p>
+                <input id="authAdminMat" class="rounded-xl bg-white/5 p-2 outline-none mb-2" placeholder="Matrícula admin"/>
+                <input id="authAdminPass" type="password" class="rounded-xl bg-white/5 p-2 outline-none" placeholder="Senha admin"/>
+              </div>
+              <button id="btnSangria" class="btn-metal rounded-xl px-4 py-3 bg-white/10 hover:bg-white/20 font-semibold">Solicitar sangria</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relatório ao vivo -->
+      <div class="glass rounded-2xl p-4 mt-6">
+        <h3 class="font-semibold mb-3">Relatório do Caixa (sessão atual)</h3>
+        <div id="tabelaLanc" class="text-sm overflow-x-auto"></div>
+      </div>
+    </section>
+
+    <!-- Modais simples -->
+    <div id="toast" class="fixed bottom-6 right-6 hidden glass rounded-xl px-4 py-3"></div>
+  </main>
+
+  <!-- Firebase -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
