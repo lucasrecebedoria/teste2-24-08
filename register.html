@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro</title>
+  <script src="https://cdn.tailwindcss.com/3.4.1"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gradient-to-b from-black to-gray-800">
+  <div class="bg-gray-900 p-6 rounded-xl shadow-xl w-96">
+    <h1 class="text-2xl text-white font-bold mb-4 text-center">Registrar</h1>
+    <form id="registerForm">
+      <label class="block text-white">Matrícula</label>
+      <input type="text" id="regMatricula" class="input mb-2" required>
+      <label class="block text-white">Nome</label>
+      <input type="text" id="regNome" class="input mb-2" required>
+      <label class="block text-white">Senha</label>
+      <input type="password" id="regSenha" class="input mb-4" required>
+      <button type="submit" class="btn w-full">Registrar</button>
+    </form>
+    <p class="text-center text-gray-400 mt-4">Já tem conta? <a href="login.html" class="text-green-400">Entrar</a></p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

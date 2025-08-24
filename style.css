@@ -1,0 +1,17 @@
+.btn {
+  @apply bg-green-600 text-white px-4 py-2 rounded-xl shadow hover:scale-105 transition-transform;
+}
+.input {
+  @apply w-full px-3 py-2 rounded-md bg-gray-700 text-white focus:outline-none;
+}
+.badge {
+  @apply inline-block px-2 py-1 text-xs rounded-full font-bold;
+}
+.badge-green {
+  background: linear-gradient(145deg, #00ff00, #006400);
+  color: black;
+}
+.badge-gold {
+  background: linear-gradient(145deg, #ffd700, #b8860b);
+  color: black;
+}
